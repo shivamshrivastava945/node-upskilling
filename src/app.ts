@@ -3,6 +3,8 @@ import { NODE_ENV, PORT} from '@config';
 import { Routes } from './interfaces/routes.interface';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import { logger } from './utils/logger';
+import errorMiddleware from './middlewares/error.middleware';
 
 
 class App {
@@ -18,15 +20,19 @@ class App {
         this.initializeMiddlewares();
         this.initializeRoutes(routes);
         this.initializeSwagger();
+        this.initializeErrorHandling();
+
 
     }
 
 
     public listen() {
-        this.app.listen(this.port, () => {
-            console.log(`======= ENV: ${this.env} =======`);
-            console.log(`App listening on the port ${this.port}`);
-        })
+      this.app.listen(this.port, () => {
+        logger.info(`=================================`);
+        logger.info(`======= ENV: ${this.env} =======`);
+        logger.info(`🚀 App listening on the port ${this.port}`);
+        logger.info(`=================================`);
+      });
     }
 
     public getServer() {
@@ -50,6 +56,9 @@ class App {
     
     private initializeMiddlewares() {
         this.app.use(express.json());
+    }
+    private initializeErrorHandling() {
+      this.app.use(errorMiddleware);
     }
     private initializeRoutes(routes: Routes[]) {
         routes.forEach(route => {

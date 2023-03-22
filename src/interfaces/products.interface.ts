@@ -4,6 +4,6 @@ export interface Product {
     pack: string;
     pack_size: number;
     pack_price: number;
-    status:boolean
+    status:boolean;
   }
   
